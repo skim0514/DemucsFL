@@ -5,29 +5,12 @@ import torchaudio
 import os
 
 
-class Application(Frame):
-    def say_hi(self):
-        print("hi there, everyone!")
+class SeparationHelper:
+    def __init__(self):
+        self.selection = False
+        self.instruments = [False, False, False, False]
+        return
 
-    def createWidgets(self):
-        self.QUIT = Button(self)
-        self.QUIT["text"] = "QUIT"
-        self.QUIT["fg"]   = "red"
-        self.QUIT["command"] =  self.quit
-
-        self.QUIT.pack({"side": "left"})
-
-        self.openFile = Button(text="Separate 1 File", command=self.openFile)
-        self.openFile.pack()
-
-        self.openDirectory = Button(text="Separate Directory", command=self.openDirectory)
-        self.openDirectory.pack()
-
-        self.hi_there = Button(self)
-        self.hi_there["text"] = "Hello",
-        self.hi_there["command"] = self.say_hi
-
-        self.hi_there.pack({"side": "left"})
 
     def openFile(self):
         filepath = filedialog.askopenfilename(filetypes=[("Audio Types", ".mp3 .wav")])
@@ -63,8 +46,19 @@ class Application(Frame):
         else:
             dir = self.check_file(dir)
             os.mkdir(dir)
-        torchaudio.save(os.path.join(dir, "vocals" + tail), vocals, sample_rate)
-        torchaudio.save(os.path.join(dir, "instr" + tail), instrumental, sample_rate)
+
+        if not self.selection:
+            torchaudio.save(os.path.join(dir, "vocals" + tail), vocals, sample_rate)
+            torchaudio.save(os.path.join(dir, "instr" + tail), instrumental, sample_rate)
+        else:
+            if self.instruments[0]:
+                torchaudio.save(os.path.join(dir, "vocals" + tail), vocals, sample_rate)
+            if self.instruments[1]:
+                torchaudio.save(os.path.join(dir, "drums" + tail), vocals, sample_rate)
+            if self.instruments[2]:
+                torchaudio.save(os.path.join(dir, "bass" + tail), vocals, sample_rate)
+            if self.instruments[3]:
+                torchaudio.save(os.path.join(dir, "other" + tail), vocals, sample_rate)
 
     def check_file(self, filePath):
         if os.path.exists(filePath):
@@ -92,16 +86,3 @@ class Application(Frame):
                 self.separate(filefull, sample_rate, filename, waveform)
             else:
                 continue
-
-
-    def __init__(self, master=None):
-        Frame.__init__(self, master)
-        self.pack()
-        self.createWidgets()
-
-
-
-root = Tk()
-app = Application(master=root)
-app.mainloop()
-root.destroy()
