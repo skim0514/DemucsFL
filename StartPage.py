@@ -1,13 +1,8 @@
 from tkinter import *
-from tkinter import filedialog
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-import SeparateAudio
-import torchaudio
-import os
 import SeparationHelper
-import SeparateAudio
 
 LARGEFONT = ("Verdana", 35)
 helper = SeparationHelper.SeparationHelper()
