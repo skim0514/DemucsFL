@@ -130,3 +130,7 @@ fabric.properties
 .idea/**/azureSettings.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,git
+
+build
+__pycache__
+StartPage.spec

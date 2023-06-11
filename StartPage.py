@@ -1,13 +1,12 @@
 from tkinter import *
 from tkinter import filedialog
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
-import SeparateAudio
+from tkinter import ttk, filedialog, messagebox
 import torchaudio
 import os
 import SeparationHelper
 import SeparateAudio
+import threading
 
 LARGEFONT = ("Verdana", 35)
 helper = SeparationHelper.SeparationHelper()
@@ -87,19 +86,36 @@ class Page1(tk.Frame):
         label = ttk.Label(self, text="Separate to Instrumental + Vocals", font=LARGEFONT)
         label.grid(row=0, column=4, padx=10, pady=10)
 
-        # button to show frame 2 with text
-        # layout2
         button1 = ttk.Button(self, text="Back to Start Page",
                              command=lambda: controller.show_frame(StartPage))
-
-        # putting the button in its place
-        # by using grid
         button1.grid(row=1, column=1, padx=10, pady=10)
 
-        openFile = Button(self, text="Separate 1 File", command=helper.openFile)
+        openFile = ttk.Button(self, text="Separate 1 File", command=self.openFileSelection)
         openFile.grid(row=2, column=1, padx=10, pady=10)
-        openDirectory = Button(self, text="Separate Directory", command=helper.openDirectory)
+        openDirectory = ttk.Button(self, text="Separate Directory", command=self.openDirectorySelection)
         openDirectory.grid(row=3, column=1, padx=10, pady=10)
+
+        # Loader frame
+        self.loader_frame = ttk.Frame(self)
+        self.progress_bar = ttk.Progressbar(self.loader_frame, mode="indeterminate")
+        self.error_label = ttk.Label(self.loader_frame, foreground="red")
+
+    def openFileSelection(self):
+        threading.Thread(target=helper.select_file).start()
+
+    def openDirectorySelection(self):
+        threading.Thread(target=helper.select_directory).start()
+            
+    # def show_loader(self):
+    #     self.loader_frame.place(in_=self, anchor="c", relx=0.5, rely=0.5)
+    #     self.progress_bar.pack(pady=10)
+    #     self.error_label.pack()
+
+    #     self.progress_bar.start()
+
+    # def hide_loader(self):
+    #     self.loader_frame.place_forget()
+    #     self.progress_bar.stop()
 
 
 class Page2(tk.Frame):
@@ -140,13 +156,13 @@ class Page2(tk.Frame):
         helper.selection = True
         if self.checkInstruments() == -1:
             return
-        helper.openFile()
+        helper.select_file()
 
     def openDirectorySelection(self):
         helper.selection = True
         if self.checkInstruments() == -1:
             return
-        helper.openDirectory()
+        helper.select_directory()
 
     def checkInstruments(self):
         if not (self.var1.get() or self.var2.get() or self.var3.get() or self.var4.get()):
