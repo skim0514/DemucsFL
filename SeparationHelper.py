@@ -80,10 +80,11 @@ class SeparationHelper:
         audios = separation.runSeparation()
         print("separation")
         # Vocals Audio
-        vocals = audios["vocals"]
+        print(audios.keys())
+        vocals = audios['vocals']
         # torchaudio.save(filepath + )
         # Instrumental Audio
-        instrumental = audios["other"] + audios["drums"] + audios["bass"]
+        instrumental = audios['other'] + audios['drums'] + audios['bass']
         dir = os.path.splitext(filepath)[0]
         if not os.path.exists(dir):
             os.mkdir(dir)
