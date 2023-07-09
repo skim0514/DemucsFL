@@ -17,7 +17,7 @@ class SeparateAudio:
 
         model = pretrained.get_model('htdemucs')
 
-        # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         #
         # model.to(device)
 
@@ -41,7 +41,7 @@ class SeparateAudio:
         # )[0]
         # sources = sources * ref.std() + ref.mean()
 
-        sources = apply_model(model, mixture)[0]
+        sources = apply_model(model, mixture, device=device)[0]
 
         sources_list = model.sources
         # sources = list(sources)

@@ -7,6 +7,7 @@ import math
 import numpy
 import pywt
 from scipy import signal
+import time
 
 
 
@@ -33,7 +34,9 @@ class SeparationHelper:
 
         self.detect_bpm(sample_rate, waveform)
 
+        start_time = time.time()
         self.separate(filepath, sample_rate, tail, waveform)
+        print("--- %s seconds ---" % (time.time() - start_time))
 
     def detect_bpm(self, sample_rate, waveform):
         n = 0
